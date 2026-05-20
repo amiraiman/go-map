@@ -14,8 +14,15 @@ func getColor(m map[string]string, k string) string {
 }
 
 func describe[K comparable, V any](m map[K]V) {
-	fmt.Println("\nALL COLORS:")
+	fmt.Println("\nMAP COLORS:")
 	for key, value := range m {
+		fmt.Printf("%v: %v\n", key, value)
+	}
+}
+
+func describeOrdered[K comparable, V any](om orderedMap[K, V]) {
+	fmt.Println("\nORDERED MAP COLORS:")
+	for key, value := range om.All() {
 		fmt.Printf("%v: %v\n", key, value)
 	}
 }
@@ -43,7 +50,7 @@ func main() {
 	oc.set("black", "#000")
 	oc.set("white", "#fff")
 
-	describe(oc.m)
-	describe(oc.m)
-	describe(oc.m)
+	describeOrdered(oc)
+	describeOrdered(oc)
+	describeOrdered(oc)
 }

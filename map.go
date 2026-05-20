@@ -1,6 +1,7 @@
 package main
 
 import (
+	"iter"
 	"slices"
 )
 
@@ -31,5 +32,15 @@ func (o *orderedMap[K, V]) remove(key K) {
 	idx := slices.Index(o.keys, key)
 	if idx != -1 {
 		o.keys = append(o.keys[:idx], o.keys[idx+1:]...)
+	}
+}
+
+func (o *orderedMap[K, V]) All() iter.Seq2[K, V] {
+	return func(yield func(K, V) bool) {
+		for _, k := range o.keys {
+			if !yield(k, o.m[k]) {
+				return
+			}
+		}
 	}
 }

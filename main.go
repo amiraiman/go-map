@@ -13,7 +13,7 @@ func getColor(m map[string]string, k string) string {
 	return val
 }
 
-func describe(m map[string]string) {
+func describe[K comparable, V any](m map[K]V) {
 	fmt.Println("\nALL COLORS:")
 	for key, value := range m {
 		fmt.Printf("%v: %v\n", key, value)
@@ -29,27 +29,21 @@ func main() {
 		"white": "#fff",
 	}
 
-	orderedColors := orderedMapStringString{
-		keySlice:   []string{},
-		orderedMap: map[string]string{},
+	describe(colors)
+	describe(colors)
+	describe(colors)
+
+	oc := orderedMap[string, string]{
+		keys: []string{},
+		m:    map[string]string{},
 	}
-	orderedColors.set("red", "#ff0000")
-	orderedColors.set("green", "#00ff00")
-	orderedColors.set("blue", "#0000ff")
-	orderedColors.set("black", "#000")
-	orderedColors.set("white", "#fff")
+	oc.set("red", "#ff0000")
+	oc.set("green", "#00ff00")
+	oc.set("blue", "#0000ff")
+	oc.set("black", "#000")
+	oc.set("white", "#fff")
 
-	describe(colors)
-	describe(colors)
-	describe(colors)
-	describe(colors)
-
-	fmt.Println("\nALL COLORS:")
-	orderedColors.describe()
-	fmt.Println("\nALL COLORS:")
-	orderedColors.describe()
-	fmt.Println("\nALL COLORS:")
-	orderedColors.describe()
-	fmt.Println("\nALL COLORS:")
-	orderedColors.describe()
+	describe(oc.m)
+	describe(oc.m)
+	describe(oc.m)
 }

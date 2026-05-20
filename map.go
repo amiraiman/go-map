@@ -1,55 +1,35 @@
 package main
 
-import "fmt"
+import (
+	"slices"
+)
 
-type orderedMapStringString struct {
-	keySlice   []string
-	orderedMap map[string]string
+type orderedMap[K comparable, V any] struct {
+	keys []K
+	m    map[K]V
 }
 
-func (o *orderedMapStringString) set(key, value string) {
+func (o *orderedMap[K, V]) set(key K, value V) {
 	// 1. Check if key already exists
-	// 2. If yes, no need to append key cause it's an update
-	exists := false
-	for _, k := range o.keySlice {
-		if k == key {
-			exists = true
-		}
-	}
-
+	// 2. If no, append key cause it's a new key
+	exists := slices.Contains(o.keys, key)
 	if !exists {
-		o.keySlice = append(o.keySlice, key)
+		o.keys = append(o.keys, key)
 	}
 
-	o.orderedMap[key] = value
+	o.m[key] = value
 }
 
-func (o *orderedMapStringString) remove(key string) {
+func (o *orderedMap[K, V]) remove(key K) {
 	// Delete from map if key exists
-	_, exists := o.orderedMap[key]
+	_, exists := o.m[key]
 	if exists {
-		delete(o.orderedMap, key)
-	}
-
-	// Get key index
-	idx := -1
-	for i, k := range o.keySlice {
-		if k == key {
-			idx = i
-		}
+		delete(o.m, key)
 	}
 
 	// Delete from slice if key exists
+	idx := slices.Index(o.keys, key)
 	if idx != -1 {
-		o.keySlice = append(o.keySlice[:idx], o.keySlice[idx+1:]...)
-	}
-}
-
-func (o *orderedMapStringString) describe() {
-	for _, k := range o.keySlice {
-		val, ok := o.orderedMap[k]
-		if ok {
-			fmt.Printf("%v: %v\n", k, val)
-		}
+		o.keys = append(o.keys[:idx], o.keys[idx+1:]...)
 	}
 }
